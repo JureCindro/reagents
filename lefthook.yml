@@ -1,0 +1,41 @@
+lint:
+  parallel: true
+  commands: &lint
+    lint-frozen-strings:
+      glob: "*.rb"
+      exclude: "schema.rb"
+      run: bin/rubocop {staged_files} --only Style/FrozenStringLiteralComment,Layout/EmptyLineAfterMagicComment --format quiet --auto-correct-all
+    lint-gemfile:
+      files: git diff --cached --name-only Gemfile
+      run: bin/rubocop {files} --only Bundler/OrderedGems --format quiet --auto-correct
+rubocop-rails:
+  commands: &rubocop-rails
+    rubocop-rails:
+      run: bin/rubocop {staged_files} --only Rails
+
+pre-commit:
+  parallel: true
+  commands:
+    <<: *lint
+    <<: *rubocop-rails
+    standardrb:
+      glob: "*.rb"
+      exclude: "schema.rb"
+      run: bin/standardrb {staged_files}
+
+post-checkout:
+  commands:
+    bundle-install:
+      run: bundle check || bundle install
+
+pre-push:
+  parallel: true
+  commands:
+    zeitwerk-check:
+      run: bin/rails zeitwerk:check
+    brakeman:
+      run: bin/brakeman --quiet --no-summary
+    bundler-audit:
+      run: bundle audit --update --quiet
+    rspec:
+      run: bundle exec rspec --format failures
