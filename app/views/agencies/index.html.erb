@@ -1,0 +1,12 @@
+<h1>Agencies</h1>
+<%= link_to "Home", root_path %>
+
+<h2>Total: <%= @agencies.count %></h2>
+
+<table>
+  <tr>
+    <th>Agency Name</th>
+    <th>Agents</th>
+  </tr>
+  <%= render @agencies %>
+</table>
