@@ -37,5 +37,3 @@ pre-push:
       run: bin/brakeman --quiet --no-summary
     bundler-audit:
       run: bundle audit --update --quiet
-    rspec:
-      run: bundle exec rspec --format failures
