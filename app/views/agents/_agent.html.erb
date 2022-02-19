@@ -4,5 +4,5 @@
   <td><%= agent.full_name %></td>
   <td><%= agent.nationality %></td>
   <td><%= agent.licence_duration %></td>
-  <td><%= agent.titleized_agency %></td>
+  <td><%= link_to_if agent.agency.present?, agent.agency, agents_path(filter: { agency: agent.agency }) %></td>
 </tr>

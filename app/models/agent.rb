@@ -3,25 +3,26 @@
 class Agent
   include ActiveModel::API
 
-  attr_accessor :id, :uuid, :full_name, :nationality, :licence_duration, :agency
+  attr_accessor :id, :uuid, :nationality, :licence_duration
+  attr_writer :full_name, :agency
 
   def full_name
     @full_name.titleize
   end
 
-  def titleized_agency
-    agency.titleize
+  def agency
+    @agency&.titleize
   end
 
   class << self
     def all
-      CSV.table(agents_csv).map do |agent_attributes|
+      @all ||= CSV.table(agents_csv).map do |agent_attributes|
         new(agent_attributes.to_h)
       end
     end
 
     def with_agency
-      all.reject { |agent| agent.agency.nil? }
+      @with_agency ||= all.reject { |agent| agent.agency.nil? }
     end
 
     def where(**args)

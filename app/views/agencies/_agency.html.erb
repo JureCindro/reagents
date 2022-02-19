@@ -1,4 +1,5 @@
 <tr>
-  <td><%= agency.titleized_name %></td>
+  <td><%= agency.name %></td>
+  <td><%= agency.agent_count %></td>
   <td><%= link_to "Agents", agents_path(filter: { agency: agency.name }) %></td>
 </tr>
