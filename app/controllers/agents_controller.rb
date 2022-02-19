@@ -6,6 +6,13 @@ class AgentsController < ApplicationController
       .yield_self { |agents| search_params.blank? ? agents : agents.search(search_params) }
   end
 
+  def without_agency
+    @agents = Agent.without_agency
+      .yield_self { |agents| search_params.blank? ? agents : agents.search(search_params) }
+
+    render :index
+  end
+
   private
 
   def query_params

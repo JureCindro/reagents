@@ -29,6 +29,10 @@ class Agent
       @with_agency ||= AgentCollection.new(all.reject { |agent| agent.agency.nil? })
     end
 
+    def without_agency
+      @without_agency ||= AgentCollection.new(all.select { |agent| agent.agency.nil? })
+    end
+
     def where(**args)
       AgentCollection.new(all.select { |agent| args.all? { |k, v| agent.send(k) == v.presence } })
     end
