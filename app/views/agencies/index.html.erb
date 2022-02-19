@@ -1,8 +1,9 @@
 <h1>Agencies</h1>
-<%= link_to "Home", root_path %>
 
 <div>
-  <p>Total: <%= @agencies.count %></p>
+  <%= render partial: 'shared/search' %>
+
+  <p>Total found: <%= @agencies.count %></p>
 </div>
 
 <table>

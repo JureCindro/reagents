@@ -13,19 +13,27 @@ class Agency
     self.class.agent_counts[name]
   end
 
+  class AgencyCollection < Array
+    def search(query)
+      select { |agency| agency.name =~ %r{.*#{query}.*}i }
+    end
+  end
+
   class << self
     def all
-      Agent.with_agency.map(&:agency).uniq
-        .map { |agency| new name: agency }
-        .sort_by(&:name)
+      AgencyCollection.new(
+        Agent.with_agency.map(&:agency).uniq
+             .map { |agency| new name: agency }
+             .sort_by(&:name)
+      )
     end
 
     def doo
-      all.reject { |agency| agency.name =~ /S\.P\.?/i }
+      AgencyCollection.new(all.reject { |agency| agency.name =~ /S\.P\.?/i })
     end
 
     def sp
-      all.select { |agency| agency.name =~ /S\.P\.?/i }
+      AgencyCollection.new(all.select { |agency| agency.name =~ /S\.P\.?/i })
     end
 
     def agent_counts

@@ -2,12 +2,17 @@
 
 class AgentsController < ApplicationController
   def index
-    @agents = Agent.where(**filter_params.to_h.symbolize_keys)
+    @agents = Agent.where(**query_params[:filter].to_h.symbolize_keys)
+      .yield_self { |agents| search_params.blank? ? agents : agents.search(search_params) }
   end
 
   private
 
-  def filter_params
-    params.permit(filter: [:agency])[:filter]
+  def query_params
+    params.permit(:search, :commit, filter: [:agency])
+  end
+
+  def search_params
+    query_params[:search]
   end
 end

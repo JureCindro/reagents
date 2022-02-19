@@ -14,19 +14,23 @@ class Agent
     @agency&.titleize
   end
 
+  class AgentCollection < Array
+    def search(query)
+      select { |agent| agent.full_name =~ %r{.*#{query}.*}i }
+    end
+  end
+
   class << self
     def all
-      @all ||= CSV.table(agents_csv).map do |agent_attributes|
-        new(agent_attributes.to_h)
-      end
+      @all ||= AgentCollection.new(CSV.table(agents_csv).map { |agent_attributes| new(agent_attributes.to_h) })
     end
 
     def with_agency
-      @with_agency ||= all.reject { |agent| agent.agency.nil? }
+      @with_agency ||= AgentCollection.new(all.reject { |agent| agent.agency.nil? })
     end
 
     def where(**args)
-      all.select { |agent| args.all? { |k, v| agent.send(k) == v.presence } }
+      AgentCollection.new(all.select { |agent| args.all? { |k, v| agent.send(k) == v.presence } })
     end
 
     private
