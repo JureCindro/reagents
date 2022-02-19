@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 class AgentsController < ApplicationController
   def index
-    puts filter_params.to_h.symbolize_keys
     @agents = Agent.where(**filter_params.to_h.symbolize_keys)
   end
 

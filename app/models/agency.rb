@@ -16,8 +16,8 @@ class Agency
   class << self
     def all
       Agent.with_agency.map(&:agency).uniq
-           .map { |agency| new name: agency }
-           .sort_by(&:name)
+        .map { |agency| new name: agency }
+        .sort_by(&:name)
     end
 
     def doo
