@@ -1,25 +1,27 @@
 # frozen_string_literal: true
 
 class AgenciesController < ApplicationController
+  before_action :set_search_param
+
   def index
-    @agencies = Agency.all.yield_self { |agencies| search_params.blank? ? agencies : agencies.search(search_params) }
+    @agencies = Agency.all.search(@search_param)
   end
 
   def doo
-    @agencies = Agency.doo.yield_self { |agencies| search_params.blank? ? agencies : agencies.search(search_params) }
+    @agencies = Agency.doo.search(@search_param)
 
     render :index
   end
 
   def sp
-    @agencies = Agency.sp.yield_self { |agencies| search_params.blank? ? agencies : agencies.search(search_params) }
+    @agencies = Agency.sp.search(@search_param)
 
     render :index
   end
 
   private
 
-  def search_params
-    params.permit(:search, :commit)[:search]
+  def set_search_param
+    @search_param = params.permit(:search, :commit)[:search]
   end
 end
